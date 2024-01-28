@@ -1,0 +1,8 @@
+const config={
+  JWT_SECRET:process.env.JWT_SECRET,
+  NODEMAILER_AUTH_USERNAME:process.env.NODEMAILER_AUTH_USERNAME,
+  NODEMAILER_AUTH_PASSWORD:process.env.NODEMAILER_AUTH_PASSWORD,
+  NODEMAILER_HOST:process.env.NODEMAILER_HOST
+}
+
+module.exports =config
