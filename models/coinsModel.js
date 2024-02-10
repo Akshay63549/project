@@ -5,6 +5,10 @@ const coinsSchema = mongoose.Schema({
     ref: 'User',
     unique: true
   },
+  coins:{
+    type:Number,
+    default:0
+  },
 isDeleted: {
     type: Boolean,
     default: false
