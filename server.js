@@ -23,15 +23,17 @@ app.use(express.urlencoded({ extended: true, limit: '100mb' }));
 // parse requests of content-type - application/json
 app.use(express.json({ limit: '100mb' }));
 
-//reseller routes
-app.use('/api/reseller', require('./routes/reseller/reseller.routes'))
 //admin routes
 app.use('/api/admin', require('./routes/admin/admin.routes'))
 //user routes
 app.use('/api/user', require('./routes/user/user.routes'))
+//seller routes
+app.use('/api/seller', require('./routes/seller/seller.routes'))
+//localseller routes
+app.use('/api/localseller', require('./routes/localseller/localseller.routes'))
 
 app.get('/', async(req, res) => {
-  res.send('iloveuniquestore Backend Run Successfully!')
+  res.send('localbazaars Backend Run Successfully!')
 })
 app.use(errorMiddleware);
 const PORT = process.env.PORT || 3000;

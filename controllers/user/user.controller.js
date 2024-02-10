@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken')
 const { validationResult } = require('express-validator');
 const nodemailer = require('nodemailer')
 const { For_FindOne, For_Create, For_FindByIdAndUpdate, For_FindOneAndUpdate, For_FindById} = require('../../utils/mongooseUtils')
-
+const Coins=require('../../models/coinsModel')
 //........................................functions............................................................
 //bcrypt password
 const securePassword = async (password) => {
@@ -155,6 +155,8 @@ const referralCode =await generateUniqueReferralCode(8);
       referralCode
     }
  const user = await For_Create(User,data)
+ const coins = await For_Create(Coins,{user:user?._id})
+
     res.json({ user })
     verifyMail(user.name, user.email, user._id)
   } catch (error) {
@@ -261,7 +263,6 @@ exports.forget_password = async (req, res) => {
 
   } catch (error) {
     res.status(500).send({ success: false, msg: error.message })
-
   }
 }
 

@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const adminSchema = mongoose.Schema({
+const sellerSchema = mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
@@ -15,4 +15,4 @@ const adminSchema = mongoose.Schema({
 }, {
   timestamps: true,
 })
-module.exports = mongoose.model('Reseller', adminSchema)
+module.exports = mongoose.model('Seller', sellerSchema)

@@ -1,10 +1,10 @@
-const Admin =require('../../models/adminModel')
+const Seller =require('../../models/sellerModel')
 const User =require('../../models/userModel')
 var ObjectId = require('mongoose').Types.ObjectId; 
 const bcryptjs = require('bcryptjs')
 const config = require('../../config/config')
 const jwt = require('jsonwebtoken');
-const { For_Find, For_FindOne, For_FindById, For_Create } = require('../../utils/mongooseUtils');
+const { For_FindById, For_FindOne } = require('../../utils/mongooseUtils');
 //functions
 //create auth-token
 const createToken = async (id) => {
@@ -16,21 +16,21 @@ const createToken = async (id) => {
   }
 }
 
-
-//assign admin
-exports.assign_admin=async(req,res)=>{
+//add seller
+exports.assign_seller=async(req,res)=>{
     try {
-    const checkuser = await For_FindById(User,{_id:req.body.user },{},{ select: 'email' })
+    const checkuser = await For_FindById(User,{_id:req.body.user },{},{ select: '_id' })
     if (checkuser) {
-    let checkAdmin = await For_FindOne(Admin,{user:new ObjectId(req.body.user)})
-      if (checkAdmin) {
+    let checkseller = await For_FindOne(Seller,{user:new ObjectId(req.body.user)})
+
+       if (checkseller) {
         return res.status(200).json({ error: "This user are already assign by admin" })  
-      } 
-      else {
-         // assign new admin 
-const admin = await For_Create(Admin,{ user:req.body.user})
-    res.json({ admin })
-    }
+       } 
+       else {
+         // assign new seller 
+ const seller = await For_Create(Seller,{ user:req.body.user})
+     res.json({ seller })
+       }
     }         
     else{
         return res.status(400).json({ error: "Sorry user not exists" })
@@ -41,15 +41,14 @@ const admin = await For_Create(Admin,{ user:req.body.user})
     }
 }
 
-
-//admin login
-exports.admin_login = async (req, res) => {
+//seller login
+exports.seller_login = async (req, res) => {
     try {
       const email = req.body.email
       const password = req.body.password
-    let checkadmin = await For_FindOne(Admin, {}, { populate: { path: "user", select: "email" } });
+    let checkseller = await For_FindOne(Seller, {}, { populate: { path: "user", select: "email" } });
     let userData = await For_FindOne(User, { email: email });
-      if (userData && checkadmin?.user?.email === email) {
+      if (userData && checkseller?.user?.email === email) {
         const passwordmatch = await bcryptjs.compare(password, userData.password)
         if (passwordmatch) {
           if (userData.isPublished) {
@@ -62,7 +61,7 @@ exports.admin_login = async (req, res) => {
             }
             const response = {
               success: true,
-              message: 'Admin Details',
+              message: 'seller Details',
               data: userResult
             }
             res.status(200).send(response)
@@ -78,14 +77,4 @@ exports.admin_login = async (req, res) => {
     } catch (error) {
       res.status(500).send(error.message)
     }
-}
-
-//get all profile
-exports.get_all_profile = async (req, res) => {
-  try {
-    const userData = await For_Find(User,{},{select:'name email'})
-    res.status(200).send({ success: true, msg: 'all user details', data: userData })
-  } catch (error) {
-    res.status(500).send({ success: false, msg: error.message })
   }
-}

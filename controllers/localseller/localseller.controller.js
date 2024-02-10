@@ -1,9 +1,11 @@
-const Reseller =require('../../models/resellerModel')
+const LocalSeller =require('../../models/localSellerModel')
 const User =require('../../models/userModel')
 var ObjectId = require('mongoose').Types.ObjectId; 
 const bcryptjs = require('bcryptjs')
 const config = require('../../config/config')
 const jwt = require('jsonwebtoken')
+const { For_FindById, For_FindOne,For_Create} = require('../../utils/mongooseUtils');
+
 //functions
 //create auth-token
 const createToken = async (id) => {
@@ -15,21 +17,19 @@ const createToken = async (id) => {
   }
 }
 
-//add reseller
-exports.assign_reseller=async(req,res)=>{
+//add local_seller
+exports.assign_local_seller=async(req,res)=>{
     try {
-        let checkuser=await User.findById({_id:req.body.user })
+      const checkuser = await For_FindById(User,{_id:req.body.user },{},{ select: '_id' })
     if (checkuser) {
-       let checkReseller=await Reseller.findOne({user:new ObjectId(req.body.user)})
-       if (checkReseller) {
+      let checklocalseller = await For_FindOne(LocalSeller,{user:new ObjectId(req.body.user)})
+       if (checklocalseller) {
         return res.status(200).json({ error: "This user are already assign by admin" })  
        } 
        else {
-         // assign new reseller 
-         let reseller = await Reseller.create({
-            user:req.body.user
-            });
-     res.json({ reseller })
+         // assign new localseller 
+ const localseller = await For_Create(LocalSeller,{ user:req.body.user})
+     res.json({ localseller })
        }
     }         
     else{
@@ -41,14 +41,14 @@ exports.assign_reseller=async(req,res)=>{
     }
 }
 
-//reseller login
-exports.reseller_login = async (req, res) => {
+//local_seller login
+exports.local_seller_login = async (req, res) => {
     try {
       const email = req.body.email
       const password = req.body.password
-      const checkreseller = await Reseller.findOne().populate('user', 'email');
-      const userData = await User.findOne({ email: email })
-      if (userData && checkreseller?.user?.email === email) {
+      let checklocalseller = await For_FindOne(LocalSeller, {}, { populate: { path: "user", select: "email" } });
+      let userData = await For_FindOne(User, { email: email });
+      if (userData && checklocalseller?.user?.email === email) {
         const passwordmatch = await bcryptjs.compare(password, userData.password)
         if (passwordmatch) {
           if (userData.isPublished) {
@@ -61,7 +61,7 @@ exports.reseller_login = async (req, res) => {
             }
             const response = {
               success: true,
-              message: 'reseller Details',
+              message: 'localSeller Details',
               data: userResult
             }
             res.status(200).send(response)
