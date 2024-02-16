@@ -1,4 +1,7 @@
 const User = require('../../models/userModel')
+const DigitalWishlist = require('../../models/DigitalWishlistModel')
+const LocalWishlist = require('../../models/localWishlistModel')
+const SellerWishlist = require('../../models/sellerWishlistModel')
 const bcryptjs = require('bcryptjs')
 const config = require('../../config/config')
 const jwt = require('jsonwebtoken')
@@ -6,6 +9,8 @@ const { validationResult } = require('express-validator');
 const nodemailer = require('nodemailer')
 const { For_FindOne, For_Create, For_FindByIdAndUpdate, For_FindOneAndUpdate, For_FindById} = require('../../utils/mongooseUtils')
 const Coins=require('../../models/coinsModel')
+const { ObjectId } = require('mongodb');
+
 //........................................functions............................................................
 //bcrypt password
 const securePassword = async (password) => {
@@ -156,7 +161,9 @@ const referralCode =await generateUniqueReferralCode(8);
     }
  const user = await For_Create(User,data)
  const coins = await For_Create(Coins,{user:user?._id})
-
+ const wishlistforlocal=await For_Create(SellerWishlist,{user:user?._id})
+ const wishlistforseller=await For_Create(LocalWishlist,{user:user?._id})
+ const wishlistfordigital=await For_Create(DigitalWishlist,{user:user?._id})
     res.json({ user })
     verifyMail(user.name, user.email, user._id)
   } catch (error) {
@@ -169,7 +176,14 @@ const referralCode =await generateUniqueReferralCode(8);
 exports.verifyUser = async (req, res) => {
   try {
     const id = req.params.id
-    const result = await For_FindByIdAndUpdate(User,id,{ isPublished: true })
+const coins = await Coins.findOne({user:id}).select("_id")
+const wishlistforlocal = await LocalWishlist.findOne({user:id}).select("_id")
+const wishlistforseller = await SellerWishlist.findOne({user:id}).select("_id")
+const wishlistfordigital = await DigitalWishlist.findOne({user:id}).select("_id")
+    const result = await For_FindByIdAndUpdate(User,id,{coins:coins?._id,isPublished: true,wishlist:{
+      local:wishlistforlocal?._id,seller:wishlistforseller?._id,digital:wishlistfordigital
+    } })
+
     const message = "email verified successfully"
     res.redirect(process.env.FRONTENDURL + '/sign-in?message=' + message + '');
   } catch (error) {

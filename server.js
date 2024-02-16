@@ -2,7 +2,6 @@ const express = require('express')
 const cors = require("cors");
 const app = express()
 const multer = require('multer');
-const Ts = require('./models/tsModel');
 const dotenv = require('dotenv');
 dotenv.config();
 //cors otions
@@ -41,20 +40,6 @@ app.use('/api/user', require('./routes/user/user.routes'))
 app.use('/api/seller', require('./routes/seller/seller.routes'))
 //localseller routes
 app.use('/api/localseller', require('./routes/localseller/localseller.routes'))
-
-// Create a Ts with image file
-app.post('/api/product/add', upload.single('productImage'), (req, res) => {
-  const { name } = req.body;
-  const image = req.file.filename; // Get the filename of the uploaded image
-  const ts = new Ts({ image, name });
-  ts.save()
-    .then(() => {
-      res.json({ message: 'Ts created successfully' });
-    })
-    .catch(err => {
-      res.status(500).json({ error: err.message });
-    });
-});
 
 app.get('/', async(req, res) => {
   res.send('localbazaars Backend Run Successfully!')

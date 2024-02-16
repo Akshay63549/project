@@ -25,6 +25,24 @@ const userSchema = mongoose.Schema({
     type: Boolean,
     default: false
   },
+  wishlist:{
+    local:{
+      type: mongoose.Schema.Types.ObjectId,
+    ref: 'LocalWishlist'
+    },
+    seller:{
+      type: mongoose.Schema.Types.ObjectId,
+    ref: 'SellerWishlist'
+    },
+    digital:{
+      type: mongoose.Schema.Types.ObjectId,
+    ref: 'DigitalWishlist'
+    },
+  },
+  coins:{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Coins'
+  },
   isDeleted: {
     type: Boolean,
     default: false
