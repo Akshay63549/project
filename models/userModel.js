@@ -43,6 +43,10 @@ const userSchema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Coins'
   },
+  cart:{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Cart'
+  },
   isDeleted: {
     type: Boolean,
     default: false

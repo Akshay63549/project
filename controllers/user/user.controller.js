@@ -1,4 +1,5 @@
 const User = require('../../models/userModel')
+const Cart = require('../../models/cartModel')
 const DigitalWishlist = require('../../models/DigitalWishlistModel')
 const LocalWishlist = require('../../models/localWishlistModel')
 const SellerWishlist = require('../../models/sellerWishlistModel')
@@ -9,7 +10,6 @@ const { validationResult } = require('express-validator');
 const nodemailer = require('nodemailer')
 const { For_FindOne, For_Create, For_FindByIdAndUpdate, For_FindOneAndUpdate, For_FindById} = require('../../utils/mongooseUtils')
 const Coins=require('../../models/coinsModel')
-const { ObjectId } = require('mongodb');
 
 //........................................functions............................................................
 //bcrypt password
@@ -161,6 +161,7 @@ const referralCode =await generateUniqueReferralCode(8);
     }
  const user = await For_Create(User,data)
  const coins = await For_Create(Coins,{user:user?._id})
+ const cart = await For_Create(Cart,{user:user?._id})
  const wishlistforlocal=await For_Create(SellerWishlist,{user:user?._id})
  const wishlistforseller=await For_Create(LocalWishlist,{user:user?._id})
  const wishlistfordigital=await For_Create(DigitalWishlist,{user:user?._id})
@@ -177,10 +178,11 @@ exports.verifyUser = async (req, res) => {
   try {
     const id = req.params.id
 const coins = await Coins.findOne({user:id}).select("_id")
+const cart = await Cart.findOne({user:id}).select("_id")
 const wishlistforlocal = await LocalWishlist.findOne({user:id}).select("_id")
 const wishlistforseller = await SellerWishlist.findOne({user:id}).select("_id")
 const wishlistfordigital = await DigitalWishlist.findOne({user:id}).select("_id")
-    const result = await For_FindByIdAndUpdate(User,id,{coins:coins?._id,isPublished: true,wishlist:{
+    const result = await For_FindByIdAndUpdate(User,id,{coins:coins?._id,isPublished: true,cart:cart?._id,wishlist:{
       local:wishlistforlocal?._id,seller:wishlistforseller?._id,digital:wishlistfordigital
     } })
 
