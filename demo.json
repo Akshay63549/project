@@ -1,0 +1,42 @@
+{
+    "_id": "65cf419a1a7783e712655964",
+    "user": "65cf419a1a7783e712655960",
+    "isDeleted": false,
+    "createdAt": "2024-02-16T11:06:02.752Z",
+    "updatedAt": "2024-02-16T11:16:55.301Z",
+    "__v": 3,
+    "products": [
+        {
+            "product": "65cf3d9a4d369ec3fc7437db",
+            "quantity": 4
+        },
+        {
+            "product": "65cf3d9a4d369ec3fc7437db3",
+            "quantity": 2
+        },
+        {
+            "product": "65cf3d9a4d369ec3fc7437db2",
+            "quantity": 7
+        },
+        {
+            "product": "65cf3d9a4d369ec3fc7437db1",
+            "quantity": 5
+        },
+        {
+            "product": "65cf3d9a4d369ec3fc7437dc",
+            "quantity": 3
+        },
+        {
+            "product": "65cf3d9a4d369ec3fc7437dc2",
+            "quantity": 1
+        },
+        {
+            "product": "65cf3d9a4d369ecdsfsd3fc7437dcwgwegewegw",
+            "quantity": 3
+        },
+        {
+            "product": "65cf3d9a4d369ecvdsvdsvdvs3fcgewgewge7437dc2",
+            "quantity": 1
+        }
+    ]
+}
